@@ -1,0 +1,1 @@
+docker run --rm -v /Users/funabikikeisuke/study/c-compiler/kcc:/kcc -w /kcc compilerbook 
