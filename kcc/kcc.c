@@ -6,7 +6,7 @@
 #include <string.h>
 
 //
-// Tokenizer
+// 字句解析器
 //
 
 typedef enum {
@@ -117,7 +117,7 @@ Token *tokenize() {
       continue;
     }
 
-    error_at(p, "トークナイズできません");
+    error_at(p, "字句解析できません");
   }
 
   new_token(TK_EOF, cur, p);
