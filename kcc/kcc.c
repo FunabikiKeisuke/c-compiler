@@ -53,7 +53,7 @@ void error_at(char *loc, char *fmt, ...) {
   exit(1);
 }
 
-// 次のトークンが期待している記号の時には、トークンを1つ読み進めて真を返す。それ以外の場合には偽を返す。
+// 次のトークンが期待している記号の時には、トークンを一つ読み進めて真を返す。それ以外の場合には偽を返す。
 bool consume(char op) {
   if (token->kind != TK_RESERVED || token->str[0] != op)
     return false;
@@ -72,7 +72,7 @@ void expect(char op) {
 int expect_number() {
   if (token->kind != TK_NUM)
     error_at(token->str, "数ではありません");
-  int val = token-> val;
+  int val = token->val;
   token = token->next;
   return val;
 }
@@ -90,7 +90,7 @@ Token *new_token(TokenKind kind, Token *cur, char *str) {
   return tok;
 }
 
-// 入力文字列pをトークナイズしてそれを返す
+// 入力文字列pを字句解析してそれを返す
 Token *tokenize() {
   char *p = user_input;
   Token head;
@@ -166,6 +166,7 @@ Node *new_num(int val) {
 
 Node *expr();
 Node *mul();
+Node *unary();
 Node *primary();
 
 // expr = mul ("+" mul | "-" mul)*
@@ -182,18 +183,28 @@ Node *expr() {
   }
 }
 
-// mul = primary ("*" primary | "/" primary)*
+// mul = unary ("*" unary | "/" unary)*
 Node *mul() {
-  Node *node = primary();
+  Node *node = unary();
 
   for (;;) {
     if (consume('*'))
-      node = new_binary(ND_MUL, node, primary());
+      node = new_binary(ND_MUL, node, unary());
     else if (consume('/'))
-      node = new_binary(ND_DIV, node, primary());
+      node = new_binary(ND_DIV, node, unary());
     else
       return node;
   }
+}
+
+// unary = ("+" | "-")? unary
+//       | primary
+Node *unary() {
+  if (consume('+'))
+    return unary();
+  if (consume('-'))
+    return new_binary(ND_SUB, new_num(0), unary());
+  return primary();
 }
 
 // primary = "(" expr ")" | num
@@ -246,7 +257,7 @@ int main(int argc, char **argv) {
   if (argc != 2)
     error("%s: 引数の個数が正しくありません", argv[0]);
 
-  // トークナイズしてパースする
+  // 字句解析して構文解析する
   user_input = argv[1];
   token = tokenize(user_input);
   Node *node = expr();
