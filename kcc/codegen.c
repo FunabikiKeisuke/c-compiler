@@ -1,12 +1,8 @@
 #include "kcc.h"
 
-//
-// 機械語生成器
-//
-
-void gen(Node *node) {
+static void gen(Node *node) {
   if (node->kind == ND_NUM) {
-    printf("  push %d\n", node->val);
+    printf("  push %ld\n", node->val);
     return;
   }
 
@@ -53,4 +49,18 @@ void gen(Node *node) {
   }
 
   printf("  push rax\n");
+}
+
+// 機械語を生成する
+void codegen(Node *node) {
+  printf(".intel_syntax noprefix\n");
+  printf(".global main\n");
+  printf("main:\n");
+
+  gen(node);
+
+  // 式の評価結果としてスタックに一つの値が残っているはずなので、
+  // スタックが溢れないようにポップしておく
+  printf("  pop rax\n");
+  printf("  ret\n");
 }
