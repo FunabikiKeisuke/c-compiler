@@ -7,7 +7,7 @@ int main(int argc, char **argv) {
   // 字句解析して構文解析する
   user_input = argv[1];
   token = tokenize();
-  Node *node = expr();
+  Node *node = program();
 
   // AST(抽象構文木)からアセンブリプログラムを出力する
   codegen(node);

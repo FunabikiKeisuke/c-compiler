@@ -57,10 +57,10 @@ void codegen(Node *node) {
   printf(".global main\n");
   printf("main:\n");
 
-  gen(node);
+  for (Node *n = node; n; n = n->next) {
+    gen(n);
+    printf("  pop rax\n");
+  }
 
-  // 式の評価結果としてスタックに一つの値が残っているはずなので、
-  // スタックが溢れないようにポップしておく
-  printf("  pop rax\n");
   printf("  ret\n");
 }

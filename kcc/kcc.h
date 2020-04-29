@@ -31,7 +31,7 @@ typedef struct Token Token;
 struct Token {
   TokenKind kind; // トークンの型
   Token *next;    // 次の入力トークン
-  long val;        // kindがTK_NUMの場合、その数値
+  long val;       // kindがTK_NUMの場合、その数値
   char *str;      // トークン文字列
   int len;        // トークン文字列長
 };
@@ -80,20 +80,21 @@ typedef enum {
 typedef struct Node Node;
 struct Node {
   NodeKind kind; // ノードの型
+  Node *next;    // 次の入力ノード
   Node *lhs;     // 左辺
   Node *rhs;     // 右辺
-  long val;       // kindがND_NUMの場合のみ使う
+  long val;      // kindがND_NUMの場合のみ使う
 };
 
 //
 //  プロトタイプ宣言(Prototype declaration)
 //
 
-Node *expr(void);
+Node *program(void);
 
 
 //------------------------------------------------
-// parse.c
+// codegen.c
 //------------------------------------------------
 
 //
