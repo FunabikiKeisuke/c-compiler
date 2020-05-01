@@ -65,16 +65,17 @@ extern Token *token;
 //
 
 typedef enum {
-  ND_ADD,    // +
-  ND_SUB,    // -
-  ND_MUL,    // *
-  ND_DIV,    // /
-  ND_EQ,     // ==
-  ND_NE,     // !=
-  ND_LT,     // <
-  ND_LE,     // <=
-  ND_RETURN, // "return"
-  ND_NUM,    // 整数
+  ND_ADD,       // +
+  ND_SUB,       // -
+  ND_MUL,       // *
+  ND_DIV,       // /
+  ND_EQ,        // ==
+  ND_NE,        // !=
+  ND_LT,        // <
+  ND_LE,        // <=
+  ND_RETURN,    // "return"
+  ND_EXPR_STMT, // 式ステートメント
+  ND_NUM,       // 整数
 } NodeKind;
 
 // AST(抽象構文木)のノードの型
