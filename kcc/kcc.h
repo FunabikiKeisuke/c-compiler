@@ -1,6 +1,7 @@
 #ifndef KCC_H
 #define KCC_H
 //------------------------------------------------
+#define _GNU_SOURCE
 #include <ctype.h>
 #include <stdarg.h>
 #include <stdbool.h>
@@ -20,6 +21,7 @@
 //  型定義(Type definition)
 //
 
+// トークン
 typedef enum {
   TK_RESERVED, // 記号
   TK_IDENT,    // 識別子
@@ -66,6 +68,15 @@ extern Token *token;
 //  型定義(Type definition)
 //
 
+// ローカル変数
+typedef struct Var Var;
+struct Var {
+  Var *next;
+  char *name; // 変数名
+  int offset; // RBPからのオフセット
+};
+
+// ASTノード
 typedef enum {
   ND_ADD,       // +
   ND_SUB,       // -
@@ -89,7 +100,7 @@ struct Node {
   Node *next;    // 次の入力ノード
   Node *lhs;     // 左辺
   Node *rhs;     // 右辺
-  char name;     // kindがND_VARの場合のみ使う
+  Var *var;     // kindがND_VARの場合のみ使う
   long val;      // kindがND_NUMの場合のみ使う
 };
 
@@ -97,7 +108,14 @@ struct Node {
 //  プロトタイプ宣言(Prototype declaration)
 //
 
-Node *program(void);
+typedef struct Function Function;
+struct Function {
+  Node *node;
+  Var *locals;
+  int stack_size;
+};
+
+Function *program(void);
 
 
 //------------------------------------------------
@@ -116,7 +134,7 @@ Node *program(void);
 //  プロトタイプ宣言(Prototype declaration)
 //
 
-void codegen(Node *node);
+void codegen(Function *prog);
 
 //------------------------------------------------
 #endif
