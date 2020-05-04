@@ -88,6 +88,7 @@ typedef enum {
   ND_LE,        // <=
   ND_ASSIGN,    // =
   ND_RETURN,    // "return"
+  ND_IF,        // "if"
   ND_EXPR_STMT, // 式ステートメント
   ND_VAR,       // 変数
   ND_NUM,       // 整数
@@ -98,8 +99,15 @@ typedef struct Node Node;
 struct Node {
   NodeKind kind; // ノードの型
   Node *next;    // 次の入力ノード
+
   Node *lhs;     // 左辺
   Node *rhs;     // 右辺
+
+  // "if"文
+  Node *cond;
+  Node *then;
+  Node *els;
+
   Var *var;     // kindがND_VARの場合のみ使う
   long val;      // kindがND_NUMの場合のみ使う
 };
